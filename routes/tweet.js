@@ -6,29 +6,28 @@ var User = require('../models').User;
  */
 exports.getTimeline = function(req, res) {
   var uid = req.session.user;
-  var tweets = [];
+  var username;
   if (uid) {
     User.find({ where: {id: uid} }).then(function(user) {
-      user.getTweets({ limit: 1}).then(function(tweet) {
-        if (tweet) {
-          tweets.push(tweet[0].dataValues);
-        }
-        console.log(tweets);
-      });
-      return user.dataValues.meta ? user.dataValues.meta['following'] : null;
+      username = user.name;
+      return user.dataValues.meta ? user.dataValues.meta['following'] : [];
     }).then(function(followingUser) {
-      // FIXME: fix promise chain
-      if (followingUser && followingUser.length && followingUser.length !== 0) {
-        console.log(followingUser);
-        User.findAll({ where: {name: {$in: followingUser}} }).map(function(user) {
-          user.getTweets({limit: 1}).then(function(theTweet) {
-            return tweets.push(theTweet[0].dataValues);
-          }).then(function() {
-            console.log(JSON.stringify(tweets));
-            return res.send(tweets);
-          });
-        });
-      }
+      //if (followingUser && followingUser.length && followingUser.length !== 0) {
+      followingUser.push(username);
+      console.log(followingUser);
+      Tweet.findAll({
+        limit: 20,
+        order: 'id DESC',
+        attributes: ['id', 'content', 'createdAt', 'expiredAt'],
+        include: [{
+          model: User,
+          attributes: ['id', 'email', 'name', 'meta'],
+          where: {name: {$in: followingUser}}
+        }]
+      }).then(function(tweets) {
+        return res.send(tweets);
+      });
+      //}
     });
   } else {
     return res.sendStatus(401);
@@ -79,7 +78,7 @@ exports.getTweet = function(req, res) {
     attributes: ['id', 'content', 'createdAt', 'expiredAt'],
     include: [{
       model: User,
-      attributes: ['id', 'name', 'meta']
+      attributes: ['id', 'email', 'name', 'meta']
     }]
   }).then(function(tweet) {
     if (tweet) {
