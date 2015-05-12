@@ -79,9 +79,10 @@ app.put('/api/users/:id', api.user.update);
  */
 
 app.get('/api/timeline', api.tweet.getTimeline);
-app.get('/api/tweet/:id', api.tweet.getTweet);
-app.post('/api/tweet', api.tweet.createTweet);
-app.delete('/api/tweet/:id', api.tweet.deleteTweet);
+app.get('/api/tweets', api.tweet.getTimeline);
+app.get('/api/tweets/:id', api.tweet.getTweet);
+app.post('/api/tweets', api.tweet.createTweet);
+app.delete('/api/tweets/:id', api.tweet.deleteTweet);
 
 app.listen(5010, function() {
   console.log('Server listening at %s:%s', this.address().address, this.address().port);
