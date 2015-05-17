@@ -8,6 +8,7 @@ exports.getTimeline = function(req, res) {
   var uid = req.session.user;
   var username;
   if (uid) {
+    var p = req.query.p || 0;
     User.find({ where: {id: uid} }).then(function(user) {
       username = user.name;
       return user.dataValues.meta ? user.dataValues.meta['following'] : [];
@@ -17,6 +18,7 @@ exports.getTimeline = function(req, res) {
       console.log(followingUser);
       Tweet.findAll({
         limit: 20,
+        offset: p,
         order: 'id DESC',
         attributes: ['id', 'content', 'createdAt', 'expiredAt'],
         include: [{
