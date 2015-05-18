@@ -51,7 +51,7 @@ exports.findUserById = function(req, res) {
       return res.sendStatus(404);
     }
   }).catch(function(err) {
-    return res.send(400, err);
+    return res.status(400).send(err);
   });
 };
 
