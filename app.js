@@ -67,7 +67,7 @@ app.delete('/session/destroy', api.session.destroy);
  *
  */
 
-app.get('/api/users/:id', api.user.findUserById);
+app.get('/api/users/:name', api.user.findUserByName);
 app.get('/api/currentuser', api.user.currentUser);
 app.post('/api/users', api.user.create);
 app.post('/api/users/follow', api.user.follow);

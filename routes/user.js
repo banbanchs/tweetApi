@@ -38,15 +38,21 @@ exports.create = function(req, res) {
 };
 
 
-exports.findUserById = function(req, res) {
-  db.User.find({ where: {id: req.params.id} }).then(function(user) {
+exports.findUserByName = function(req, res) {
+  var p = req.query.p || 0;
+  db.User.find({
+    where: {name: req.params.name},
+    attributes: ['id', 'email', 'name', 'meta'],
+    include: [{
+      model: db.Tweet,
+      limit: 20,
+      offset: p,
+      order: 'id DESC',
+      attributes: ['id', 'content', 'createdAt', 'expiredAt']
+    }]
+  }).then(function(user) {
     if (user) {
-      return res.json({
-        '_id': user.id,
-        'name': user.name,
-        'email': user.email,
-        'meta': user.meta
-      });
+      return res.json(user);
     } else {
       return res.sendStatus(404);
     }
