@@ -39,14 +39,14 @@ exports.create = function(req, res) {
 
 
 exports.findUserByName = function(req, res) {
-  var p = req.query.p || 0;
+  var page = req.query.page * 20 || 0;
   db.User.find({
     where: {name: req.params.name},
     attributes: ['id', 'email', 'name', 'meta'],
     include: [{
       model: db.Tweet,
       limit: 20,
-      offset: p,
+      offset: page,
       order: 'id DESC',
       attributes: ['id', 'content', 'createdAt', 'expiredAt']
     }]
