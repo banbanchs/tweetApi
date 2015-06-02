@@ -9,6 +9,10 @@ module.exports = function(sequelize, DataType) {
     password: { type: DataType.STRING, allowNull: false },
     meta: { type: DataType.JSON, allowNull: true }
   }, {
+    indexes: [
+      { unique: true, fields: [ 'email' ] },
+      { fields: [ 'name' ] }
+    ],
     classMethods: {
       associate: function(models) {
         User.hasMany(models.Tweet);

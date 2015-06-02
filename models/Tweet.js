@@ -21,7 +21,10 @@ module.exports = function(sequelize, DataType) {
       associate: function(models) {
         Tweet.belongsTo(models.User);
       }
-    }
+    },
+    indexes: [
+      { fields: [ 'createdAt' ] }
+    ]
   });
   return Tweet;
 };
