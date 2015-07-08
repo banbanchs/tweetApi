@@ -56,14 +56,9 @@ exports.createTweet = function(req, res) {
       console.log(now);
       Tweet.create({ content: content, createdAt: now, expiredAt: expireDate }).then(function(tweet) {
         user.addTweets(tweet);
-        return tweet.dataValues;
+        return tweet;
       }).then(function(tweet) {
-        return res.status(201).send({
-          _id: tweet.id,
-          content: tweet.content,
-          createdAt: tweet.createdAt,
-          userId: uid
-        });
+        return res.status(201).send(tweet);
       });
     }).catch(function(err) {
       console.log(err);
